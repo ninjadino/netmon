@@ -2,12 +2,13 @@ from setuptools import setup, find_packages
 import netmon
 setup(
     name='netmon',
+    packages=find_packages(),
     version=netmon.__version__,
+    install_requires=['scapy', 'netifaces', 'ipaddress'],
     author="raf",
     description="Provide some network discovery functions",
     long_description=open('README.md').read(),
     include_package_data=True,
-    package_dir = {'': 'netmon'},
     url='https://github.com/rafBizos/netmon',
     classifiers=[
         "Programming Language :: Python",

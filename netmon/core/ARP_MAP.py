@@ -4,8 +4,7 @@ import ipaddress
 import netifaces
 import pprint
 from socket import gaierror
-from nmb.NetBIOS import NetBIOS
-
+import os
 
 def ARPRequest(ipaddr, timeout=0.1):
     ether=Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -48,6 +47,30 @@ def get_nm(nm):
     for l in nm.packed:
          c+="{0:b}".format((ord(l))).count('1')
     return c
+
+def exists_in_path(cmd):
+  assert not os.path.dirname(cmd)
+
+  extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
+  for directory in os.environ.get("PATH", "").split(os.pathsep):
+    base = os.path.join(directory, cmd)
+    options = [base] + [(base + ext) for ext in extensions]
+    for filename in options:
+      if os.path.exists(filename):
+        return True
+  return False
+
+
+if exists_in_path('nbtscan'):
+    from subprocess import check_output
+    def queryNBName(ip):
+        out = check_output("nbtscan  -t 10 -s : {}".format(ip), shell=True)
+        return out.split(':')[1].strip()
+
+
+else:
+    def queryNBName(ip):
+        raise NotImplementedError()
 
 
 

@@ -64,8 +64,11 @@ def exists_in_path(cmd):
 if exists_in_path('nbtscan'):
     from subprocess import check_output
     def queryNBName(ip):
-        out = check_output("nbtscan  -t 10 -s : {}".format(ip), shell=True)
-        return out.split(':')[1].strip()
+        try:
+            out = check_output("nbtscan  -t 10 -s : {}".format(ip), shell=True)
+            return out.split(':')[1].strip()
+        except IndexError:
+            return None
 
 
 else:
@@ -73,4 +76,5 @@ else:
         raise NotImplementedError()
 
 
+queryNBName('1.1.1.1')
 
